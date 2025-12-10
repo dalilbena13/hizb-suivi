@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hizb al A'la - Suivi d'apprentissage</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a5f3c;
+            --primary-light: #2d8659;
+            --secondary: #d4af37;
+            --accent: #8b4513;
+            --bg-light: #f8f6f1;
+            --bg-white: #ffffff;
+            --text-dark: #1a1a1a;
+            --text-muted: #666;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --phonetic-bg: #e8f4f8;
+            --phonetic-border: #4a90a4;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #f8f6f1 0%, #e8e4da 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: var(--bg-white);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px var(--shadow);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .header h1 {
+            font-family: 'Amiri', serif;
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+
+        .controls {
+            padding: 30px;
+            background: var(--bg-light);
+            border-bottom: 3px solid var(--secondary);
+        }
+
+        .student-management {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .student-management input {
+            flex: 1;
+            min-width: 250px;
+            padding: 14px 20px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .student-management input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(26, 95, 60, 0.1);
+        }
+
+        button {
+            padding: 14px 30px;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(26, 95, 60, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #d32f2f 0%, #f44336 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--secondary) 0%, #f4d03f 100%);
+            color: var(--text-dark);
+        }
+
+        .student-selector {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .student-selector select {
+            flex: 1;
+            padding: 14px 20px;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1em;
+            background: white;
+            cursor: pointer;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(26, 95, 60, 0.2);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card h3 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .stat-card p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 35px;
+            background: #e0e0e0;
+            border-radius: 20px;
+            overflow: hidden;
+            margin: 20px 0;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 50%, var(--secondary) 100%);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .week-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .week-card {
+            background: white;
+            border: 3px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px var(--shadow);
+        }
+
+        .week-card:hover {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            transform: translateY(-3px);
+        }
+
+        .week-card.completed {
+            border-color: var(--success);
+            background: linear-gradient(135deg, #f1f8f4 0%, #e8f5e9 100%);
+        }
+
+        .week-card.revision {
+            border-color: var(--warning);
+            background: linear-gradient(135deg, #fff8e1 0%, #ffe0b2 100%);
+        }
+
+        .week-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .week-number {
+            font-size: 1.6em;
+            font-weight: 700;
+            color: var(--primary);
+            font-family: 'Amiri', serif;
+        }
+
+        .week-type {
+            font-size: 1.2em;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .week-type.apprentissage {
+            background: var(--primary);
+            color: white;
+        }
+
+        .week-type.revision-type {
+            background: var(--warning);
+            color: white;
+        }
+
+        .sourate-info {
+            background: var(--bg-light);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-left: 5px solid var(--secondary);
+        }
+
+        .sourate-name {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-family: 'Amiri', serif;
+        }
+
+        .verses {
+            color: var(--text-muted);
+            font-size: 1em;
+            margin-top: 5px;
+        }
+
+        .revision-info {
+            background: #fff3e0;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 5px solid var(--warning);
+            margin-bottom: 15px;
+        }
+
+        .revision-title {
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: var(--bg-light);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 15px;
+        }
+
+        .checkbox-container:hover {
+            background: #e8e4da;
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            accent-color: var(--primary);
+        }
+
+        .checkbox-container label {
+            cursor: pointer;
+            user-select: none;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        .sourate-details-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--secondary) 0%, #f4d03f 100%);
+            color: var(--text-dark);
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .sourate-details-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background-color: var(--bg-white);
+            margin: 3% auto;
+            padding: 0;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 1000px;
+            max-height: 90vh;
+            overflow: hidden;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.4);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 25px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-family: 'Amiri', serif;
+            font-size: 2em;
+            margin: 0;
+        }
+
+        .close {
+            color: white;
+            font-size: 35px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+            line-height: 1;
+        }
+
+        .close:hover {
+            transform: scale(1.2);
+        }
+
+        .modal-body {
+            padding: 30px;
+            overflow-y: auto;
+            max-height: calc(90vh - 100px);
+        }
+
+        .text-section {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: var(--bg-light);
+            border-radius: 15px;
+            border-left: 5px solid var(--secondary);
+        }
+
+        .text-section h3 {
+            color: var(--primary);
+            font-family: 'Amiri', serif;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .arabic-text {
+            font-family: 'Amiri', serif;
+            font-size: 1.8em;
+            line-height: 2.5;
+            color: var(--text-dark);
+            text-align: justify;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            margin-top: 15px;
+            direction: rtl;
+        }
+
+        /* Style pour la translittération phonétique */
+        .phonetic-section {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: var(--phonetic-bg);
+            border-radius: 15px;
+            border-left: 5px solid var(--phonetic-border);
+        }
+
+        .phonetic-section h3 {
+            color: var(--phonetic-border);
+            font-family: 'Cairo', sans-serif;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .phonetic-text {
+            font-family: 'Cairo', sans-serif;
+            font-size: 1.2em;
+            line-height: 2.2;
+            color: var(--text-dark);
+            text-align: left;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            margin-top: 15px;
+            direction: ltr;
+        }
+
+        .phonetic-verse {
+            margin-bottom: 15px;
+            padding: 12px 15px;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-radius: 10px;
+            border-left: 4px solid var(--phonetic-border);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .phonetic-verse-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--phonetic-border);
+            color: white;
+            min-width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 0.9em;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .phonetic-verse-text {
+            font-size: 1.15em;
+            color: #1e3a5f;
+            line-height: 1.6;
+        }
+
+        .basmala-verse {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%) !important;
+            border-left-color: #d97706 !important;
+        }
+
+        .basmala-verse .phonetic-verse-text {
+            font-style: italic;
+            color: #92400e;
+        }
+
+        .french-text {
+            font-family: 'Cairo', sans-serif;
+            font-size: 1.1em;
+            line-height: 1.9;
+            color: var(--text-dark);
+            text-align: justify;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            margin-top: 15px;
+        }
+
+        .audio-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 25px;
+            color: white;
+        }
+
+        .audio-section h3 {
+            margin-bottom: 15px;
+            font-family: 'Amiri', serif;
+            font-size: 1.5em;
+        }
+
+        .audio-player {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 12px;
+            margin-top: 15px;
+        }
+
+        audio {
+            width: 100%;
+            outline: none;
+        }
+
+        .no-student {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--text-muted);
+        }
+
+        .no-student-icon {
+            font-size: 5em;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .loading-spinner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px;
+            gap: 20px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #e0e0e0;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            border: 2px solid var(--primary);
+            background: white;
+            color: var(--primary);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .tab-btn:hover {
+            background: var(--primary-light);
+            color: white;
+            border-color: var(--primary-light);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .student-management {
+                flex-direction: column;
+            }
+            
+            .student-management input,
+            .student-management button {
+                width: 100%;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 5% auto;
+            }
+
+            .arabic-text {
+                font-size: 1.5em;
+            }
+
+            .phonetic-text {
+                font-size: 1.1em;
+            }
+
+            .tab-buttons {
+                justify-content: center;
+            }
+
+            .phonetic-verse {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📖 Hizb al A'la - حزب الأعلى</h1>
+            <p>Programme de suivi d'apprentissage et révision du Coran</p>
+        </div>
+
+        <div class="controls">
+            <div class="student-management">
+                <input type="text" id="studentName" placeholder="Nom de l'élève..." />
+                <button class="btn-primary" id="addStudentBtn">➕ Ajouter élève</button>
+                <button class="btn-success" id="exportBtn">💾 Exporter données</button>
+            </div>
+
+            <div class="student-selector" id="studentSelector" style="display: none;">
+                <select id="studentSelect">
+                    <option value="">Sélectionner un élève...</option>
+                </select>
+                <button class="btn-danger" id="deleteBtn">🗑️ Supprimer</button>
+            </div>
+        </div>
+
+        <div class="content" id="content">
+            <div class="no-student">
+                <span class="no-student-icon">👥</span>
+                <h2>Aucun élève enregistré</h2>
+                <p>Commencez par ajouter un élève ci-dessus</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="sourateModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalSourateName"></h2>
+                <span class="close" id="closeModalBtn">&times;</span>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        // Programme data
+        const programData = [
+            { week: 1, type: "revision", sourate: "الفاتحة (Al Fatiha)", number: 1, verseStart: "", verseEnd: "", revisions: [] },
+            { week: 2, type: "revision", sourate: "الناس (An Nass)", number: 114, verseStart: "", verseEnd: "", revisions: ["الفاتحة (Al Fatiha)"] },
+            { week: 3, type: "revision", sourate: "الفلق (Al Falaq)", number: 113, verseStart: "", verseEnd: "", revisions: ["الناس (An Nass)"] },
+            { week: 4, type: "revision", sourate: "الإخلاص (Al Ikhlas)", number: 112, verseStart: "", verseEnd: "", revisions: ["الناس (An Nass) + الفلق (Al Falaq)"] },
+            { week: 5, type: "revision", sourate: "المسد (Al Masad)", number: 111, verseStart: "", verseEnd: "", revisions: ["De An Nas jusqu'à Al Ikhlas"] },
+            { week: 6, type: "revision", sourate: "النصر (An Nasr)", number: 110, verseStart: "", verseEnd: "", revisions: ["المسد (Al Masad)"] },
+            { week: 7, type: "revision", sourate: "الكافرون (Al Kafirun)", number: 109, verseStart: "", verseEnd: "", revisions: ["المسد (Al Masad) + النصر (An Nasr)"] },
+            { week: 8, type: "revision", sourate: "الكوثر (Al Kawthar)", number: 108, verseStart: "", verseEnd: "", revisions: ["De Al Masad jusqu'à Al Kafirun"] },
+            { week: 9, type: "revision", sourate: "الماعون (Al Ma'un)", number: 107, verseStart: "", verseEnd: "", revisions: ["الكوثر (Al Kawthar)"] },
+            { week: 10, type: "revision", sourate: "قريش (Quraysh)", number: 106, verseStart: "", verseEnd: "", revisions: ["الكوثر (Al Kawthar) + الماعون (Al Ma'un)"] },
+            { week: 11, type: "revision", sourate: "الفيل (Al Fil)", number: 105, verseStart: "", verseEnd: "", revisions: ["De Al Kawthar jusqu'à Quraysh"] },
+            { week: 12, type: "revision", sourate: "الهمزة (Al Humazah)", number: 104, verseStart: "", verseEnd: "", revisions: ["الفيل (Al Fil)"] },
+            { week: 13, type: "revision", sourate: "العصر (Al 'Asr)", number: 103, verseStart: "", verseEnd: "", revisions: ["الفيل (Al Fil) + الهمزة (Al Humazah)"] },
+            { week: 14, type: "revision", sourate: "التكاثر (At Takathur)", number: 102, verseStart: "", verseEnd: "", revisions: ["De Al Fil jusqu'à al 'Asr"] },
+            { week: 15, type: "revision", sourate: "القارعة (Al Qari'ah)", number: 101, verseStart: "", verseEnd: "", revisions: ["التكاثر (At Takathur)"] },
+            { week: 16, type: "revision", sourate: "Révisions", number: 0, verseStart: "", verseEnd: "", revisions: [] },
+            { week: 17, type: "apprentissage", sourate: "العاديات (Al 'Adiyat)", number: 100, verseStart: "", verseEnd: "", revisions: ["القارعة (Al Qari'ah)"] },
+            { week: 18, type: "apprentissage", sourate: "الزلزلة (Az Zalzalah)", number: 99, verseStart: "", verseEnd: "", revisions: ["القارعة (Al Qari'ah) + العاديات (Al 'Adiyat)"] },
+            { week: 19, type: "apprentissage", sourate: "البينة (Al Bayinah)", number: 98, verseStart: "1", verseEnd: "5", revisions: ["العاديات (Al 'Adiyat) + الزلزلة (Az Zalzalah)"] },
+            { week: 20, type: "apprentissage", sourate: "البينة (Al Bayinah)", number: 98, verseStart: "6", verseEnd: "8", revisions: ["De Al Qari'ah jusqu'à Az Zalzalah"] },
+            { week: 21, type: "apprentissage", sourate: "القدر (Al Qadr)", number: 97, verseStart: "", verseEnd: "", revisions: ["البينة (Al Bayinah)"] },
+            { week: 22, type: "apprentissage", sourate: "العلق (Al 'Alaq)", number: 96, verseStart: "1", verseEnd: "9", revisions: ["البينة (Al Bayinah) + القدر (Al Qadr)"] },
+            { week: 23, type: "apprentissage", sourate: "العلق (Al 'Alaq)", number: 96, verseStart: "10", verseEnd: "19", revisions: ["De Al Bayinah jusqu'à Al Qadr"] },
+            { week: 24, type: "apprentissage", sourate: "التين (At Tin)", number: 95, verseStart: "", verseEnd: "", revisions: ["العلق (Al 'Alaq)"] },
+            { week: 25, type: "apprentissage", sourate: "الشرح (As Sharh)", number: 94, verseStart: "", verseEnd: "", revisions: ["التين (At Tin) + العلق (Al 'Alaq)"] },
+            { week: 26, type: "apprentissage", sourate: "الضحى (Ad Duha)", number: 93, verseStart: "1", verseEnd: "6", revisions: ["الشرح (As Sharh) + التين (At Tin)"] },
+            { week: 27, type: "apprentissage", sourate: "الضحى (Ad Duha)", number: 93, verseStart: "7", verseEnd: "11", revisions: ["De Al 'Alaq jusqu'à As Sharh"] },
+            { week: 28, type: "apprentissage", sourate: "الليل (Al Layl)", number: 92, verseStart: "1", verseEnd: "11", revisions: ["De An Nas jusqu'à Al Kafirun + الضحى (Ad Duha)"] },
+            { week: 29, type: "apprentissage", sourate: "الليل (Al Layl)", number: 92, verseStart: "12", verseEnd: "21", revisions: ["De Al Kawthar jusqu'à Al 'Asr"] },
+            { week: 30, type: "apprentissage", sourate: "الشمس (As Shams)", number: 91, verseStart: "1", verseEnd: "10", revisions: ["De At Takathur jusqu'à Az Zalzalah + الليل (Al Layl)"] },
+            { week: 31, type: "apprentissage", sourate: "الشمس (As Shams)", number: 91, verseStart: "11", verseEnd: "15", revisions: ["De Al Bayinah jusqu'à Al 'Alaq"] },
+            { week: 32, type: "revision", sourate: "Révisions", number: 0, verseStart: "", verseEnd: "", revisions: [] },
+            { week: 33, type: "apprentissage", sourate: "البلد (Al Balad)", number: 90, verseStart: "1", verseEnd: "7", revisions: ["الشمس (As Shams) + الليل (Al Layl)"] },
+            { week: 34, type: "apprentissage", sourate: "البلد (Al Balad)", number: 90, verseStart: "8", verseEnd: "16", revisions: ["الضحى (Ad Duha) + الشمس (As Shams) + الليل (Al Layl)"] },
+            { week: 35, type: "apprentissage", sourate: "البلد (Al Balad)", number: 90, verseStart: "17", verseEnd: "20", revisions: ["De Al 'Alaq jusqu'à As Sharh"] },
+            { week: 36, type: "apprentissage", sourate: "الفجر (Al Fajr)", number: 89, verseStart: "1", verseEnd: "10", revisions: ["البلد (Al Balad)"] },
+            { week: 37, type: "apprentissage", sourate: "الفجر (Al Fajr)", number: 89, verseStart: "11", verseEnd: "17", revisions: ["البينة (Al Bayinah) + البلد (Al Balad)"] },
+            { week: 38, type: "apprentissage", sourate: "الفجر (Al Fajr)", number: 89, verseStart: "18", verseEnd: "23", revisions: ["De At Takathur jusqu'à Az Zalzalah + البلد (Al Balad)"] },
+            { week: 39, type: "apprentissage", sourate: "الفجر (Al Fajr)", number: 89, verseStart: "24", verseEnd: "30", revisions: ["De An Nas jusqu'à Al 'Asr"] },
+            { week: 40, type: "apprentissage", sourate: "الغاشية (Al Ghashiya)", number: 88, verseStart: "1", verseEnd: "9", revisions: ["الفجر (Al Fajr)"] },
+            { week: 41, type: "apprentissage", sourate: "الغاشية (Al Ghashiya)", number: 88, verseStart: "10", verseEnd: "18", revisions: ["البلد (Al Balad) + الفجر (Al Fajr)"] },
+            { week: 42, type: "apprentissage", sourate: "الغاشية (Al Ghashiya)", number: 88, verseStart: "19", verseEnd: "26", revisions: ["الشمس (As Shams) + الفجر (Al Fajr)"] },
+            { week: 43, type: "apprentissage", sourate: "الأعلى (Al A'la)", number: 87, verseStart: "1", verseEnd: "10", revisions: ["الغاشية (Al Ghashiya)"] },
+            { week: 44, type: "apprentissage", sourate: "الأعلى (Al A'la)", number: 87, verseStart: "11", verseEnd: "19", revisions: ["الليل (Al Layl) + الغاشية (Al Ghashiya)"] },
+            { week: 45, type: "revision", sourate: "Révisions", number: 0, verseStart: "", verseEnd: "", revisions: [] }
+        ];
+
+        // Cache pour les données des sourates
+        const sourateCache = {};
+
+        let students = JSON.parse(localStorage.getItem('hizbStudents')) || {};
+        let currentStudent = localStorage.getItem('currentStudent') || '';
+
+        // Event Listeners
+        document.getElementById('addStudentBtn').addEventListener('click', addStudent);
+        document.getElementById('deleteBtn').addEventListener('click', deleteStudent);
+        document.getElementById('exportBtn').addEventListener('click', exportData);
+        document.getElementById('studentSelect').addEventListener('change', loadStudentProgress);
+        document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('sourateModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        function addStudent() {
+            const name = document.getElementById('studentName').value.trim();
+            if (!name) {
+                alert('Veuillez entrer un nom');
+                return;
+            }
+            if (students[name]) {
+                alert('Cet élève existe déjà');
+                return;
+            }
+            
+            students[name] = {};
+            programData.forEach(week => {
+                students[name][week.week] = false;
+            });
+            
+            saveData();
+            document.getElementById('studentName').value = '';
+            updateStudentSelect();
+            document.getElementById('studentSelect').value = name;
+            currentStudent = name;
+            localStorage.setItem('currentStudent', currentStudent);
+            loadStudentProgress();
+        }
+
+        function deleteStudent() {
+            const name = document.getElementById('studentSelect').value;
+            if (!name) return;
+            
+            if (confirm(`Voulez-vous vraiment supprimer l'élève "${name}" ?`)) {
+                delete students[name];
+                saveData();
+                currentStudent = '';
+                localStorage.setItem('currentStudent', '');
+                updateStudentSelect();
+                loadStudentProgress();
+            }
+        }
+
+        function updateStudentSelect() {
+            const select = document.getElementById('studentSelect');
+            select.innerHTML = '<option value="">Sélectionner un élève...</option>';
+            
+            Object.keys(students).sort().forEach(name => {
+                const option = document.createElement('option');
+                option.value = name;
+                option.textContent = name;
+                select.appendChild(option);
+            });
+            
+            document.getElementById('studentSelector').style.display = 
+                Object.keys(students).length > 0 ? 'flex' : 'none';
+        }
+
+        function loadStudentProgress() {
+            const studentName = document.getElementById('studentSelect').value;
+            currentStudent = studentName;
+            localStorage.setItem('currentStudent', currentStudent);
+            
+            const content = document.getElementById('content');
+            
+            if (!studentName) {
+                content.innerHTML = `
+                    <div class="no-student">
+                        <span class="no-student-icon">👥</span>
+                        <h2>Sélectionnez un élève</h2>
+                        <p>Choisissez un élève dans la liste ci-dessus</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const progress = students[studentName];
+            const completed = Object.values(progress).filter(v => v).length;
+            const total = programData.length;
+            const percentage = Math.round((completed / total) * 100);
+            
+            let html = `
+                <div class="stats">
+                    <div class="stat-card">
+                        <h3>${completed}</h3>
+                        <p>Semaines complétées</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>${total - completed}</h3>
+                        <p>Semaines restantes</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>${percentage}%</h3>
+                        <p>Progression</p>
+                    </div>
+                </div>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${percentage}%">${percentage}%</div>
+                </div>
+                
+                <div style="margin-top: 30px;">
+                    <h2 style="margin-bottom: 20px; color: var(--primary);">📅 Programme hebdomadaire</h2>
+                    <div class="week-grid">
+            `;
+            
+            programData.forEach(week => {
+                const isCompleted = progress[week.week];
+                const completedClass = isCompleted ? 'completed' : '';
+                const revisionClass = week.type === 'revision' ? 'revision' : '';
+                
+                html += `
+                    <div class="week-card ${completedClass} ${revisionClass}">
+                        <div class="week-header">
+                            <span class="week-number">Semaine ${week.week}</span>
+                            <span class="week-type ${week.type === 'revision' ? 'revision-type' : 'apprentissage'}">
+                                ${week.type === 'revision' ? '🔄 Révision' : '📖 Apprentissage'}
+                            </span>
+                        </div>
+                        <div class="week-content">
+                            <div class="sourate-info">
+                                <div class="sourate-name">${week.sourate}</div>
+                                ${week.verseStart && week.verseEnd ? `<div class="verses">Versets: ${week.verseStart} - ${week.verseEnd}</div>` : ''}
+                            </div>
+                            ${week.revisions.length > 0 ? `
+                                <div class="revision-info">
+                                    <div class="revision-title">📚 Révisions:</div>
+                                    ${week.revisions.map(r => `<div>• ${r}</div>`).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                        <div class="checkbox-container" data-week="${week.week}">
+                            <input type="checkbox" ${isCompleted ? 'checked' : ''}>
+                            <label>${isCompleted ? '✅ Complété' : '⏳ À faire'}</label>
+                        </div>
+                        ${week.number > 0 ? `
+                            <button class="sourate-details-btn" data-sourate="${week.number}" data-name="${week.sourate}">
+                                📖 Afficher la sourate complète
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+            });
+            
+            html += `
+                    </div>
+                </div>
+            `;
+            
+            content.innerHTML = html;
+
+            // Attach event listeners for checkboxes
+            document.querySelectorAll('.checkbox-container').forEach(container => {
+                container.addEventListener('click', function(e) {
+                    if (e.target.tagName !== 'INPUT') {
+                        const weekNum = parseInt(this.getAttribute('data-week'));
+                        toggleWeek(studentName, weekNum);
+                    }
+                });
+            });
+
+            // Attach event listeners for sourate buttons
+            document.querySelectorAll('.sourate-details-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const sourateNum = parseInt(this.getAttribute('data-sourate'));
+                    const sourateName = this.getAttribute('data-name');
+                    showSourateDetails(sourateNum, sourateName);
+                });
+            });
+        }
+
+        function toggleWeek(studentName, weekNumber) {
+            students[studentName][weekNumber] = !students[studentName][weekNumber];
+            saveData();
+            loadStudentProgress();
+        }
+
+        function saveData() {
+            localStorage.setItem('hizbStudents', JSON.stringify(students));
+        }
+
+        function exportData() {
+            const dataStr = JSON.stringify(students, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `hizb_suivi_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+        }
+
+        async function showSourateDetails(sourateNumber, sourateName) {
+            const modal = document.getElementById('sourateModal');
+            const modalBody = document.getElementById('modalBody');
+            const modalTitle = document.getElementById('modalSourateName');
+            
+            modalTitle.textContent = sourateName;
+            modalBody.innerHTML = `
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    <p>Chargement des données...</p>
+                </div>
+            `;
+            modal.style.display = 'block';
+
+            try {
+                // Vérifier le cache
+                if (sourateCache[sourateNumber]) {
+                    displaySourateContent(sourateCache[sourateNumber], sourateNumber);
+                    return;
+                }
+
+                // URL de l'audio - CDN Islamic Network (sourate complète)
+                const audioUrl = `https://cdn.islamic.network/quran/audio-surah/128/ar.alafasy/${sourateNumber}.mp3`;
+
+                // Récupérer les données depuis api.alquran.cloud (supporte CORS)
+                // On récupère arabe, français et translittération en une seule requête
+                const response = await fetch(
+                    `https://api.alquran.cloud/v1/surah/${sourateNumber}/editions/quran-uthmani,fr.hamidullah,en.transliteration`
+                );
+                
+                if (!response.ok) {
+                    throw new Error('Erreur API');
+                }
+                
+                const result = await response.json();
+                
+                if (result.code !== 200 || !result.data) {
+                    throw new Error('Données invalides');
+                }
+
+                // result.data est un tableau de 3 éditions
+                const [arabicData, frenchData, translitData] = result.data;
+
+                // Stocker dans le cache
+                sourateCache[sourateNumber] = {
+                    arabic: arabicData,
+                    french: frenchData,
+                    transliteration: translitData,
+                    audioUrl: audioUrl
+                };
+
+                displaySourateContent(sourateCache[sourateNumber], sourateNumber);
+
+            } catch (error) {
+                console.error('Error loading sourate details:', error);
+                modalBody.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #d32f2f;">
+                        <p style="font-size: 3em; margin-bottom: 20px;">⚠️</p>
+                        <p>Erreur lors du chargement des données</p>
+                        <p style="font-size: 0.9em; color: #666; margin-top: 10px;">Vérifiez votre connexion internet et réessayez</p>
+                        <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer;">
+                            🔄 Réessayer
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function displaySourateContent(data, sourateNumber) {
+            const modalBody = document.getElementById('modalBody');
+            
+            // Préparer le texte arabe
+            let arabicText = '';
+            // Ajouter la Basmala sauf pour sourate At-Tawba (9)
+            if (sourateNumber !== 9) {
+                arabicText = 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ<br><br>';
+            }
+            data.arabic.ayahs.forEach((ayah) => {
+                arabicText += `${ayah.text} ⟨${ayah.numberInSurah}⟩ `;
+            });
+
+            // Préparer la translittération phonétique
+            let phoneticHtml = '';
+            
+            // Ajouter la Basmala sauf pour sourate At-Tawba (9)
+            if (sourateNumber !== 9) {
+                phoneticHtml += `
+                    <div class="phonetic-verse basmala-verse">
+                        <span class="phonetic-verse-text">Bismillāhi r-raḥmāni r-raḥīm</span>
+                    </div>
+                `;
+            }
+            
+            if (data.transliteration && data.transliteration.ayahs) {
+                data.transliteration.ayahs.forEach((ayah) => {
+                    phoneticHtml += `
+                        <div class="phonetic-verse">
+                            <span class="phonetic-verse-number">${ayah.numberInSurah}</span>
+                            <span class="phonetic-verse-text">${ayah.text}</span>
+                        </div>
+                    `;
+                });
+            }
+
+            // Préparer la traduction française
+            let frenchText = '';
+            // Ajouter la Basmala sauf pour sourate At-Tawba (9)
+            if (sourateNumber !== 9) {
+                frenchText = 'Au nom d\'Allah, le Tout Miséricordieux, le Très Miséricordieux.<br><br>';
+            }
+            data.french.ayahs.forEach((ayah) => {
+                frenchText += `<strong>(${ayah.numberInSurah})</strong> ${ayah.text} `;
+            });
+
+            modalBody.innerHTML = `
+                <div class="tab-buttons">
+                    <button class="tab-btn active" data-tab="arabic">📖 Arabe</button>
+                    <button class="tab-btn" data-tab="phonetic">🔤 Phonétique</button>
+                    <button class="tab-btn" data-tab="french">🇫🇷 Français</button>
+                    <button class="tab-btn" data-tab="all">📚 Tout afficher</button>
+                </div>
+
+                <div id="tab-arabic" class="tab-content active">
+                    <div class="text-section">
+                        <h3>📖 Texte en arabe</h3>
+                        <div class="arabic-text">${arabicText}</div>
+                    </div>
+                </div>
+
+                <div id="tab-phonetic" class="tab-content">
+                    <div class="phonetic-section">
+                        <h3>🔤 Translittération phonétique</h3>
+                        <p style="margin-bottom: 15px; color: #666; font-size: 0.95em;">
+                            La translittération vous aide à prononcer les versets correctement en utilisant l'alphabet latin.
+                        </p>
+                        <div class="phonetic-text">${phoneticHtml}</div>
+                    </div>
+                </div>
+
+                <div id="tab-french" class="tab-content">
+                    <div class="text-section">
+                        <h3>🇫🇷 Traduction française (Hamidullah)</h3>
+                        <div class="french-text">${frenchText}</div>
+                    </div>
+                </div>
+
+                <div id="tab-all" class="tab-content">
+                    <div class="text-section">
+                        <h3>📖 Texte en arabe</h3>
+                        <div class="arabic-text">${arabicText}</div>
+                    </div>
+
+                    <div class="phonetic-section">
+                        <h3>🔤 Translittération phonétique</h3>
+                        <div class="phonetic-text">${phoneticHtml}</div>
+                    </div>
+
+                    <div class="text-section">
+                        <h3>🇫🇷 Traduction française (Hamidullah)</h3>
+                        <div class="french-text">${frenchText}</div>
+                    </div>
+                </div>
+
+                <div class="audio-section">
+                    <h3>🔊 Écouter avec la voix du Cheikh Mishary Alafasy</h3>
+                    <div class="audio-player">
+                        <audio controls>
+                            <source src="${data.audioUrl}" type="audio/mp3">
+                            Votre navigateur ne supporte pas l'élément audio.
+                        </audio>
+                    </div>
+                </div>
+            `;
+
+            // Ajouter les event listeners pour les onglets
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Désactiver tous les onglets
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    // Activer l'onglet sélectionné
+                    this.classList.add('active');
+                    document.getElementById(`tab-${tabId}`).classList.add('active');
+                });
+            });
+        }
+
+        function closeModal() {
+            document.getElementById('sourateModal').style.display = 'none';
+        }
+
+        // Initialize
+        updateStudentSelect();
+        if (currentStudent && students[currentStudent]) {
+            document.getElementById('studentSelect').value = currentStudent;
+            loadStudentProgress();
+        }
+    </script>
+</body>
+</html>
